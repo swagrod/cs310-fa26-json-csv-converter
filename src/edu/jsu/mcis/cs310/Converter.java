@@ -102,7 +102,7 @@ public class Converter {
            //Read each of the rest of the rows
            String[] row;
            
-           while((row = reader.reeadNext()) != null){
+           while((row = Scanner.readNext()) != null){
                // Production number
                prodNums.add(row[0]);
                
@@ -124,22 +124,19 @@ public class Converter {
                
                //Json object
                JsonObject json = new JsonObject();
+                       
+               json.put("Prodnums", prodNums);
+               json.put("ColHeadings", colHeadings);
+               json.put("Dara", data);
                
+               //Converting the JSON
+               result = Jsoner.serialize(json);
                
-               
+               Scanner.close();
            }
-        
-        
-        
-        
-        
-        
-        
+           
         }
         
-        
-        
-      
         catch (Exception e) {
             e.printStackTrace();
         }
@@ -155,7 +152,8 @@ public class Converter {
         
         try {
             
-            // INSERT YOUR CODE HERE
+            //JSON Strings in three parts
+            JosnObject json = (JsonObject) Jsoner.deserialize(jsonString);
             
         }
         catch (Exception e) {
