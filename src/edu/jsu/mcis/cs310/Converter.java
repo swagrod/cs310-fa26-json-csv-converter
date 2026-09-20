@@ -3,6 +3,9 @@ package edu.jsu.mcis.cs310;
 import com.github.cliftonlabs.json_simple.*;
 import com.opencsv.*;
 
+import java.io.*;
+import java.util.*;
+
 public class Converter {
     
     /*
@@ -78,9 +81,65 @@ public class Converter {
         
         try {
         
-            // INSERT YOUR CODE HERE
+            //This will read the data for scanner
+           CSVReader Scanner = new CSVReader(new StringReader(csvString));
+           
+           // This read the frist row in the heading
+           String[] headings = Scanner.readNext();
+           
+           // These will be the list to store everything
             
+           List <String> prodNums = new ArrayList();
+           List <String> colHeadings = new ArrayList();
+           List <List<Object>> data = new ArrayList<>();
+           
+           // this is to add the colum to the header list
+           
+           for (String heading : headings){
+               colHeadings.add(heading);
+           }
+           
+           //Read each of the rest of the rows
+           String[] row;
+           
+           while((row = reader.reeadNext()) != null){
+               // Production number
+               prodNums.add(row[0]);
+               
+               //episode data for the list
+               List<Object> episode = new ArrayList();
+               
+               //Convert seasons and episode into intergers
+               for(int i = 1; i < row.length; i++){
+                    if(i == 2 || i ==3){
+                        episode.add(Integer.parseInt(row[i]));
+                    }
+                    
+                    else{
+                        episode.add(row[i]);
+                    }
+                    
+                    data.add(episode);
+           }
+               
+               //Json object
+               JsonObject json = new JsonObject();
+               
+               
+               
+           }
+        
+        
+        
+        
+        
+        
+        
         }
+        
+        
+        
+      
         catch (Exception e) {
             e.printStackTrace();
         }
