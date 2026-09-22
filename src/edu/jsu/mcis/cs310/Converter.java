@@ -153,8 +153,51 @@ public class Converter {
         try {
             
             //JSON Strings in three parts
-            JosnObject json = (JsonObject) Jsoner.deserialize(jsonString);
+            JsonObject json = (JsonObject) Jsoner.deserialize(jsonString);
             
+            JsonArray prodNums = (JsonArray) json.get("ProdNums");
+            JsonArray colHeadings = (JsonArray) json.get("ColHeadings");
+            JsonArray data = (JsonArray) json.get("Data");
+            
+            StringWriter writer = new StringWriter();
+            CSVWriter csvWriter = new CSVWriter(writer);
+            
+            //Header row
+            String[] headings = new String[colHeadings.size()];
+            for(int i = 0; i < headings.length; i++) {
+                headings[i] = colHeadings.get(i).toString();
+            }
+           
+            csvWriter.writeNext(headings);
+            
+            // One CSV row per episode\\
+            
+            for(int i = 0; i < data.size(); i++){
+                 JsonArray episode = (JsonArray) data.get(i);
+ 
+                String[] row = new String[episode.size() + 1];
+ 
+                // ProdNum is the first column
+                row[0] = prodNums.get(i).toString();
+ 
+                for (int j = 0; j < episode.size(); j++) {
+ 
+                    String value = episode.get(j).toString();
+ 
+                    // Episode number was "01" in the CSV, so pad it back to 2 digits
+                    if (headings[j + 1].equals("Episode")) {
+                        value = String.format("%02d", Integer.parseInt(value));
+                    }
+ 
+                    row[j + 1] = value;
+ 
+                }
+                
+                csvWriter.writeNext(row);
+            }        
+            
+            csvWriter.close();
+            result = writer.toString();
         }
         catch (Exception e) {
             e.printStackTrace();
